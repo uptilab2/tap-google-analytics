@@ -96,6 +96,8 @@ venv.bak/
 
 # Rope project settings
 .ropeproject
+catalog.json
+config.json
 
 # mkdocs documentation
 /site
