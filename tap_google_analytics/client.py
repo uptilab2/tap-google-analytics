@@ -77,13 +77,17 @@ class Client():
         self.last_refreshed = utils.now()
 
         if self.auth_method == "oauth2":
+            LOGGER.info('auth method oauth2')
             payload = {
                 "refresh_token": self.refresh_token,
                 "client_id": self.client_id,
                 "client_secret": self.client_secret,
                 "grant_type": "refresh_token"
             }
+            LOGGER.info('PAYLOAD :')
+            LOGGER.info(payload)
         else:
+            LOGGER.info('not oauth2')
             message = {
                 "iss": self.client_email,
                 "scope": "https://www.googleapis.com/auth/analytics.readonly",
@@ -91,17 +95,25 @@ class Client():
                 "exp": math.floor((self.last_refreshed + timedelta(hours=1)).timestamp()),
                 "iat": math.floor(self.last_refreshed.timestamp())
             }
+            LOGGER.info('MSG :')
+            LOGGER.info(message)
             signing_key = jwk_from_pem(self.private_key)
             payload = {
                 "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
                 "assertion": JWT().encode(message, signing_key, 'RS256')
             }
+            LOGGER.info('PAYLOAD :')
+            LOGGER.info(payload)
 
         token_response = requests.post("https://oauth2.googleapis.com/token", data=payload)
+        LOGGER.info('RES TOKEN :')
+        LOGGER.info(token_response)
 
         token_response.raise_for_status()
 
         token_json = token_response.json()
+        LOGGER.info('TOKEN JSON')
+        LOGGER.info(token_json)
         self.__access_token = token_json['access_token']
         self.expires_in = token_json['expires_in']
 
