@@ -42,6 +42,7 @@ class Client():
             return
 
         LOGGER.info("Refreshing access token.")
+        LOGGER.info('Refreshing 1');
         self.last_refreshed = utils.now()
 
         payload = {

@@ -72,6 +72,8 @@ class Client():
             return
 
         LOGGER.info("Refreshing access token.")
+
+        LOGGER.info('Refreshing 2');
         self.last_refreshed = utils.now()
 
         if self.auth_method == "oauth2":
