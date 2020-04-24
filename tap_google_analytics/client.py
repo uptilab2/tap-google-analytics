@@ -128,9 +128,13 @@ class Client():
         params = params or {}
         data = data or {}
 
+        LOGGER.info('before access token')
         self._ensure_access_token()
+        LOGGER.info('after access token')
 
         headers = {"Authorization" : "Bearer " + self.__access_token}
+        LOGGER.info('HEADER')
+        LOGGER.info(headers)
         if self.quota_user:
             params["quotaUser"] = self.quota_user
 
@@ -138,8 +142,13 @@ class Client():
             response = self.session.post(url, headers=headers, params=params, json=data)
         else:
             response = self.session.request(method, url, headers=headers, params=params)
+        
+        LOGGER.info('RESPONSE ?')
+        LOGGER.info(response)
 
         error_message = _is_json(response) and response.json().get("error", {}).get("message")
+        LOGGER.info('ERROR MSG? ')
+        LOGGER.info(error_message)
         if response.status_code == 400 and error_message:
             raise Exception("400 Client Error: Bad Request, details: {}".format(error_message))
 
