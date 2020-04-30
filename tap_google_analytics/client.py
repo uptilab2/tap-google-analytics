@@ -145,6 +145,7 @@ class Client():
         
         LOGGER.info('RESPONSE ?')
         LOGGER.info(response)
+        LOGGER.info(response.json())
 
         error_message = _is_json(response) and response.json().get("error", {}).get("message")
         LOGGER.info('ERROR MSG? ')
