@@ -135,6 +135,7 @@ class Client():
         headers = {"Authorization" : "Bearer " + self.__access_token}
         LOGGER.info('HEADER')
         LOGGER.info(headers)
+        LOGGER.info(url)
         if self.quota_user:
             params["quotaUser"] = self.quota_user
 
