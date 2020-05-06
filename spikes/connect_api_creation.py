@@ -86,7 +86,7 @@ mdata = [
                 {
                     "name": "My Session Stream",
                     "metrics": [
-                        "ga:users",
+                        "ga_users",
                         "ga:newUsers",
                         "ga:sessions",
                         "ga:sessionsPerUser",
