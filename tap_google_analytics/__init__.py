@@ -108,6 +108,12 @@ def do_sync(client, config, catalog, state):
 
         schema = stream.schema.to_dict()
 
+        LOGGER.info("DEBUG WRITE SCHEMA")
+        # We need to understand when we're writing schema and when to switch metrics without ga: prefix
+        LOGGER.info(stream.stream)
+        LOGGER.info(schema)
+        LOGGER.info(stream.key_properties)
+
         singer.write_schema(
             stream.stream,
             schema,

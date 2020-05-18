@@ -46,8 +46,8 @@ def type_to_schema(ga_type):
     else:
         raise Exception("Unknown Google Analytics type: {}".format(ga_type))
 
-# TODO: Trim the `` here?
-# TODO: Do we need to generate the `XX` fields schemas here somehow? e.g., 'productCategoryLevel5' vs. 'productCategoryLevelXX'
+# TODO: Trim the `ga:` here?
+# TODO: Do we need to generate the `XX` fields schemas here somehow? e.g., 'ga:productCategoryLevel5' vs. 'ga:productCategoryLevelXX'
 # - The numeric versions are in `ga_cubes.json`
 field_schemas = {**{f["id"]: type_to_schema(f["dataType"]) for f in standard_fields},
                  **{f["id"]: type_to_schema(f["dataType"]) for f in custom_fields}}
@@ -304,11 +304,11 @@ known_metric_types = {"transactionsPerSession": "FLOAT",
 
 # These are the fields whose datatype is different from the sets above,
 # and are not handled in other ways -- 'CURRENCY' or 'PERCENT'
-all_datatype_discrepancies = {f["id"]: {**known_dimension_types, **known_metric_types}[f["id"]]
+all_datatype_discrepancies = {f["id"].split(":")[1]: {**known_dimension_types, **known_metric_types}[f["id"].split(":")[1]]
                               for f in standard_fields
-                              if f["id"] in {**known_dimension_types, **known_metric_types}
+                              if f["id"].split(":")[1] in {**known_dimension_types, **known_metric_types}
                               and f['dataType'] not in ['CURRENCY', 'PERCENT']
-                              and f["dataType"] != {**known_dimension_types, **known_metric_types}[f["id"]]}
+                              and f["dataType"] != {**known_dimension_types, **known_metric_types}[f["id"].split(":")[1]]}
 
 # ipdb> pp {f["id"]: {**known_dimension_types, **known_metric_types}[f["id"]] for f in standard_fields if f["id"] in {**known_dimension_types, **known_metric_types} and f["dataType"] != {**known_dimension_types, **known_metric_types}[f["id"]] and f["dataType"] == "STRING"}
 
@@ -348,6 +348,7 @@ float_field_overrides = {'latitude',
                          'timeOnScreen'}
 
 def revised_type_to_schema(ga_type, field_id):
+    field_id = field_id.split(":")[1]
     if field_id in datetime_field_overrides:
         return {"type": ["string", "null"], "format": "date-time"}
     elif ga_type == 'CURRENCY':
@@ -368,11 +369,11 @@ def revised_type_to_schema(ga_type, field_id):
     else:
         raise Exception("Unknown Google Analytics type: {}".format(ga_type))
 
-# TODO: Trim the `` here?
-# TODO: Do we need to generate the `XX` fields schemas here somehow? e.g., 'productCategoryLevel5' vs. 'productCategoryLevelXX'
+# TODO: Trim the `ga:` here?
+# TODO: Do we need to generate the `XX` fields schemas here somehow? e.g., 'ga:productCategoryLevel5' vs. 'ga:productCategoryLevelXX'
 # - The numeric versions are in `ga_cubes.json`
-revised_field_schemas = {**{f["id"]: type_to_schema(f["dataType"]) for f in standard_fields},
-                         **{f["id"]: type_to_schema(f["dataType"]) for f in custom_fields}}
+revised_field_schemas = {**{f["id"].split(':')[1]: type_to_schema(f["dataType"]) for f in standard_fields},
+                         **{f["id"].split(':')[1]: type_to_schema(f["dataType"]) for f in custom_fields}}
 
 # Expand Out standard XX fields into their numeric counterparts
 # This will give us all of the fields that exist, including the actual names of standard `XX` fields
@@ -381,7 +382,7 @@ field_exclusions = discover.generate_exclusions_lookup()
 # Translate the known standard `XX` fields to their numeric counterparts
 # NOTE: This should probably happen before generating schemas, that way we get one for each.
 xx_fields = [f for f in standard_fields if 'XX' in f['id']]
-xx_field_regexes = {f['id'].replace('XX', r'\d\d?'): f for f in xx_fields}
+xx_field_regexes = {f['id'].split(':')[1].replace('XX', r'\d\d?'): f for f in xx_fields}
 numeric_xx_fields = [{**field_info, **{"id": numeric_field_id}}
                      for regex, field_info in xx_field_regexes.items()
                      for numeric_field_id in field_exclusions.keys() if re.match(regex, numeric_field_id)]
@@ -438,7 +439,7 @@ def get_goals_for_profile(access_token, account_id, web_property_id, profile_id)
 # 1. Standard, non XX fields
 # 2. Standard, Goal XX fields -- still XX in exclusions map
 # 3. Standard, Non-Goal XX fields -- In numeric form in exclusions map
-# 4. Custom Fields (metricXX and dimensionXX for now)
+# 4. Custom Fields (ga:metricXX and ga:dimensionXX for now)
 
 # Algo:
 # generate ALL the schemas
@@ -537,7 +538,11 @@ def generate_catalog_entry(client, standard_fields, custom_fields, field_exclusi
     mdata = metadata.get_standard_metadata(schema=schema, key_properties=["_sdc_record_hash"])
     mdata = metadata.to_map(mdata)
 
+    LOGGER.info("debug generate catalog entry")
+    LOGGER.info(standard_fields)
     for standard_field in standard_fields:
+        LOGGER.info("ENTRY : ")
+        LOGGER.info(standard_field)
         if standard_field['status'] == 'DEPRECATED':
             continue
         matching_fields = []
@@ -560,9 +565,9 @@ def generate_catalog_entry(client, standard_fields, custom_fields, field_exclusi
 
     for custom_field in custom_fields:
         if custom_field["kind"] == 'analytics#customDimension':
-            exclusion_lookup_name = 'dimensionXX'
+            exclusion_lookup_name = 'ga:dimensionXX'
         elif custom_field["kind"] == 'analytics#customMetric':
-            exclusion_lookup_name = 'metricXX'
+            exclusion_lookup_name = 'ga:metricXX'
         else:
             raise Exception('Unknown custom field "kind": {}'.format(custom_field["kind"]))
 
@@ -576,8 +581,8 @@ def generate_catalog_entry(client, standard_fields, custom_fields, field_exclusi
 client = {}
 generate_catalog_entry(client, standard_fields, custom_fields, field_exclusions)
 
-# TODO: DESIGN - It occurs during this research that the `` version of
-# fields wouldn't be best, so we may want to write metadata with the ``
+# TODO: DESIGN - It occurs during this research that the `ga:` version of
+# fields wouldn't be best, so we may want to write metadata with the `ga:`
 # name and instead use the friendly name in the schema (this should appear
 # on the `field_infos` objects in standard_Fields and custom_fields)
 
