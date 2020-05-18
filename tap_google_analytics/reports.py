@@ -1,6 +1,6 @@
 PREMADE_REPORTS = [
     {
-        "name": "Audience Overview",
+        "name": "audience_overview",
         "metrics": [
             "ga:users",
             "ga:newUsers",
