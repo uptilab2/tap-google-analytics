@@ -84,7 +84,7 @@ example_field = {'attributes': {'addedInApiVersion': '3',
                                 'status': 'PUBLIC', # This can also be 'DEPRECATED', should be removed from discovery if so
                                 'type': 'DIMENSION',
                                 'uiName': 'User Type'},
-                 'id': 'ga:userType',
+                 'id': 'userType',
                  'kind': 'analytics#column'}
 
 #####################################
@@ -96,7 +96,7 @@ def transform_field(field):
                               if k in {"dataType", "group", "status", "type", "uiName"}}
     # TODO: It seems like some dimensions can be typed as an integer or float, so we might want to do that when generating schemas.
     # - They may come through here as "string". This should be validated when building discovery
-    return {"id": field["id"], **interesting_attributes}
+    return {"id": field["id"].split(':')[1], **interesting_attributes}
 
 def get_field_infos():
     metadata_response = requests.get("https://www.googleapis.com/analytics/v3/metadata/{reportType}/columns".format(reportType="ga"),
@@ -153,7 +153,7 @@ possible_statuses = {'DEPRECATED', 'PUBLIC'}
 
 # ?????????? Custom Fields?
 # >>> [k for k, v in field_infos.items() if v["group"] == "Custom Variables or Columns"]
-custom_ELLIPSIS_variables_QMARK = ['ga:customVarValueXX', 'ga:calcMetric_<NAME>', 'ga:metricXX', 'ga:customVarNameXX', 'ga:dimensionXX']
+custom_ELLIPSIS_variables_QMARK = ['customVarValueXX', 'calcMetric_<NAME>', 'metricXX', 'customVarNameXX', 'dimensionXX']
 
 ##################################################################
 # Grab list of field exclusions and transform them into metadata #

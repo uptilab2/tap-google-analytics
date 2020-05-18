@@ -190,7 +190,7 @@ for tap_stream_id in tap_stream_ids:
                         "selected": True
                     }
                 },
-                *[{"breadcrumb": ["properties", name], "metadata": {"selected": True}} for name in ["ga:users", "ga:newUsers", "ga:sessionsPerUser", "ga:userType"]]
+                *[{"breadcrumb": ["properties", name], "metadata": {"selected": True}} for name in ["users", "newUsers", "sessionsPerUser", "userType"]]
             ]
         })
     else:
@@ -203,17 +203,17 @@ for tap_stream_id in tap_stream_ids:
                         "selected": True
                     }
                 },
-                *[{"breadcrumb": ["properties", name], "metadata": {"selected": True}} for name in ["ga:users",
-                                                                                                    "ga:newUsers",
-                                                                                                    "ga:sessions",
-                                                                                                    "ga:sessionsPerUser",
-                                                                                                    "ga:avgSessionDuration",
-                                                                                                    "ga:pageviews",
-                                                                                                    "ga:pageviewsPerSession",
-                                                                                                    "ga:avgTimeOnPage",
-                                                                                                    "ga:bounceRate",
-                                                                                                    "ga:exitRate",
-                                                                                                    "ga:date"]]
+                *[{"breadcrumb": ["properties", name], "metadata": {"selected": True}} for name in ["users",
+                                                                                                    "newUsers",
+                                                                                                    "sessions",
+                                                                                                    "sessionsPerUser",
+                                                                                                    "avgSessionDuration",
+                                                                                                    "pageviews",
+                                                                                                    "pageviewsPerSession",
+                                                                                                    "avgTimeOnPage",
+                                                                                                    "bounceRate",
+                                                                                                    "exitRate",
+                                                                                                    "date"]]
             ]
         })
 
