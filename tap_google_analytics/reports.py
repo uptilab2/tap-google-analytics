@@ -1,155 +1,155 @@
 PREMADE_REPORTS = [
     {
-        "name": "Audience Overview",
+        "name": "audience_overview",
         "metrics": [
-            "ga:users",
-            "ga:newUsers",
-            "ga:sessions",
-            "ga:sessionsPerUser",
-            "ga:pageviews",
-            "ga:pageviewsPerSession",
-            "ga:avgSessionDuration",
-            "ga:bounceRate"
+            "users",
+            "newUsers",
+            "sessions",
+            "sessionsPerUser",
+            "pageviews",
+            "pageviewsPerSession",
+            "avgSessionDuration",
+            "bounceRate"
         ],
         "dimensions": [
-            "ga:date",
-            "ga:language",
-            "ga:country",
-            "ga:city",
-            "ga:browser",
-            "ga:operatingSystem",
-            "ga:screnResolution",
-            "ga:year",
-            "ga:month",
-            "ga:hour",
+            "date",
+            "language",
+            "country",
+            "city",
+            "browser",
+            "operatingSystem",
+            "screnResolution",
+            "year",
+            "month",
+            "hour",
         ],
         "default_dimensions": [
-            "ga:date"
+            "date"
         ]
     },
     {
-        "name": "Audience Geo Location",
+        "name": "audience_geo_location",
         "metrics": [
-            "ga:users",
-            "ga:newUsers",
-            "ga:sessions",
-            "ga:pageviewsPerSession",
-            "ga:avgSessionDuration",
-            "ga:bounceRate"
+            "users",
+            "newUsers",
+            "sessions",
+            "pageviewsPerSession",
+            "avgSessionDuration",
+            "bounceRate"
         ],
         "dimensions": [
-            "ga:date",
-            "ga:year",
-            "ga:month",
-            "ga:hour",
-            "ga:country",
-            "ga:city",
-            "ga:continent",
-            "ga:subContinent"
+            "date",
+            "year",
+            "month",
+            "hour",
+            "country",
+            "city",
+            "continent",
+            "subContinent"
         ],
         "default_dimensions": [
-            "ga:date",
-            "ga:country",
-            "ga:city",
-            "ga:continent",
-            "ga:subContinent"
+            "date",
+            "country",
+            "city",
+            "continent",
+            "subContinent"
         ]
     },
     {
-        "name": "Audience Technology",
+        "name": "audience_technology",
         "metrics": [
-            "ga:users",
-            "ga:newUsers",
-            "ga:sessions",
-            "ga:pageviewsPerSession",
-            "ga:avgSessionDuration",
-            "ga:bounceRate"
+            "users",
+            "newUsers",
+            "sessions",
+            "pageviewsPerSession",
+            "avgSessionDuration",
+            "bounceRate"
         ],
         "dimensions": [
-            "ga:date",
-            "ga:year",
-            "ga:month",
-            "ga:hour",
-            "ga:browser",
-            "ga:operatingSystem",
-            "ga:screenResolution",
-            "ga:screenColors",
-            "ga:flashVersion",
-            "ga:javaEnabled",
-            "ga:hostname"
+            "date",
+            "year",
+            "month",
+            "hour",
+            "browser",
+            "operatingSystem",
+            "screenResolution",
+            "screenColors",
+            "flashVersion",
+            "javaEnabled",
+            "hostname"
         ],
         "default_dimensions": [
-            "ga:date",
-            "ga:browser",
-            "ga:operatingSystem",
+            "date",
+            "browser",
+            "operatingSystem",
         ]
     },
     {
-        "name": "Acquisition Overview",
+        "name": "acquisition_overview",
         "metrics": [
-            "ga:sessions",
-            "ga:pageviewsPerSession",
-            "ga:avgSessionDuration",
-            "ga:bounceRate"
+            "sessions",
+            "pageviewsPerSession",
+            "avgSessionDuration",
+            "bounceRate"
         ],
         "dimensions": [
-            'ga:acquisitionMedium',
-            'ga:acquisitionSource',
-            'ga:acquisitionSourceMedium',
-            'ga:acquisitionTrafficChannel'
+            'acquisitionMedium',
+            'acquisitionSource',
+            'acquisitionSourceMedium',
+            'acquisitionTrafficChannel'
         ],
         "default_dimensions": [
-            "ga:acquisitionTrafficChannel",
-            "ga:acquisitionSource",
-            "ga:acquisitionSourceMedium",
-            "ga:acquisitionMedium",
+            "acquisitionTrafficChannel",
+            "acquisitionSource",
+            "acquisitionSourceMedium",
+            "acquisitionMedium",
         ]
     },
     {
-        "name": "Behavior Overview",
+        "name": "behavior_overview",
         "metrics": [
-            "ga:pageviews",
-            "ga:uniquePageviews",
-            "ga:avgTimeOnPage",
-            "ga:bounceRate",
-            "ga:exitRate",
-            "ga:exits"
+            "pageviews",
+            "uniquePageviews",
+            "avgTimeOnPage",
+            "bounceRate",
+            "exitRate",
+            "exits"
         ],
         "dimensions": [
-            "ga:date",
-            "ga:year",
-            "ga:month",
-            "ga:hour",
-            "ga:pagePath",
-            "ga:pageTitle",
-            "ga:searchKeyword",
-            "ga:eventCategory"
+            "date",
+            "year",
+            "month",
+            "hour",
+            "pagePath",
+            "pageTitle",
+            "searchKeyword",
+            "eventCategory"
         ],
         "default_dimensions": [
-            "ga:date",
-            "ga:pagePath",
-            "ga:pageTitle",
-            "ga:searchKeyword"
+            "date",
+            "pagePath",
+            "pageTitle",
+            "searchKeyword"
         ]
     },
     {
-        "name": "Ecommerce Overview",
-        "metrics": ["ga:transactions"],
+        "name": "ecommerce_overview",
+        "metrics": ["transactions"],
         "dimensions": [
-            "ga:transactionId",
-            "ga:campaign",
-            "ga:source",
-            "ga:medium",
-            "ga:keyword",
-            "ga:socialNetwork"
+            "transactionId",
+            "campaign",
+            "source",
+            "medium",
+            "keyword",
+            "socialNetwork"
         ],
         "default_dimensions": [
-            "ga:transactionId",
-            "ga:campaign",
-            "ga:source",
-            "ga:medium",
-            "ga:keyword",
-            "ga:socialNetwork"
+            "transactionId",
+            "campaign",
+            "source",
+            "medium",
+            "keyword",
+            "socialNetwork"
         ]
     }
 ]
