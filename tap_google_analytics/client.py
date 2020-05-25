@@ -259,8 +259,8 @@ class Client():
                     [{"viewId": profile_id,
                       "dateRanges": [{"startDate": report_date_string,
                                       "endDate": report_date_string}],
-                      "metrics": [{"expression": m} for m in metrics],
-                      "dimensions": [{"name": d} for d in dimensions]}]}
+                      "metrics": [{"expression": f'ga:{m}'} for m in metrics],
+                      "dimensions": [{"name": f'ga:{d}'} for d in dimensions]}]}
             if nextPageToken:
                 body["reportRequests"][0]["pageToken"] = nextPageToken
             with singer.metrics.http_request_timer(name):

@@ -31,6 +31,8 @@ MANIFEST
 *.manifest
 *.spec
 config.json
+catalog.json
+settings.json
 
 # Installer logs
 pip-log.txt

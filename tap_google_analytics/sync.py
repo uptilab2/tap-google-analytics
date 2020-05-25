@@ -60,8 +60,13 @@ def report_to_records(raw_report):
     # - https://developers.google.com/analytics/devguides/reporting/core/v4/rest/v4/reports/batchGet#ReportData
     report = raw_report["reports"][0]
     column_headers = report["columnHeader"]
-    metrics_headers = [mh["name"] for mh in column_headers["metricHeader"]["metricHeaderEntries"]]
-    dimensions_headers = column_headers.get("dimensions", [])
+    metrics_headers = [mh["name"].replace('ga:', '') for mh in column_headers["metricHeader"]["metricHeaderEntries"]]
+    dimensions_headers = [d.replace('ga:', '') for d in column_headers.get("dimensions", [])]
+
+    LOGGER.info("DEBUG DIM AND METRICS")
+    LOGGER.info(metrics_headers)
+    LOGGER.info('--------')
+    LOGGER.info(dimensions_headers)
 
     for row in report.get("data", {}).get("rows", []):
         record = {}

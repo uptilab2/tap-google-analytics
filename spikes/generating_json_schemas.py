@@ -523,9 +523,10 @@ def handle_dynamic_XX_field(client, field, field_exclusions):
 
 def write_metadata(mdata, field, exclusions):
     """ Translate a field_info object and its exclusions into its metadata, and write it. """
-    mdata = metadata.write(mdata, ("properties", field["id"]), "inclusion", "available")
-    mdata = metadata.write(mdata, ("properties", field["id"]), "fieldExclusions", list(exclusions))
-    mdata = metadata.write(mdata, ("properties", field["id"]), "behavior", field["type"])
+    field_name = field['id'].split(':')[1]
+    mdata = metadata.write(mdata, ("properties", field_name), "inclusion", "available")
+    mdata = metadata.write(mdata, ("properties", field_name), "fieldExclusions", list(exclusions))
+    mdata = metadata.write(mdata, ("properties", field_name), "behavior", field["type"])
 
     # TODO: What other pieces of metadata do we need? probably tap_google_analytics.ga_name, tap_google_analytics.profile_id, etc?
     # - Also, metric/dimension needs to be in metadata for the UI (refer to adwords for key) 'behavior'
