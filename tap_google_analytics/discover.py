@@ -418,6 +418,12 @@ def generate_catalog(client, report_config, standard_fields, custom_fields, all_
     """
     catalog_entries = []
     for report in PREMADE_REPORTS:
+        # Here we're gonna take all metrics from cubes, and try to get all.
+        # if report['all']:
+        #     metrics_dimensions = set(client.get_all_metrics_from_cubes())
+        #     LOGGER.debug("DEBUG ALL REPORTS METRICS")
+        #     LOGGER.debug(metrics_dimensions)
+        # else:
         metrics_dimensions = set(report['metrics'] + report['dimensions'])
         selected_by_default = {*report['metrics'][:10], # Use first 10 metrics in definition
                                *report.get('default_dimensions', [])}

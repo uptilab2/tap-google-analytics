@@ -106,6 +106,14 @@ class Client():
         cubes_response = self.get("https://ga-dev-tools.appspot.com/ga_cubes.json")
         return cubes_response.json()
 
+    def get_all_metrics_from_cubes(self):
+        cubes = self.get("https://ga-dev-tools.appspot.com/ga_cubes.json").json()
+        metrics = []
+        for k in cubes:
+            for metric in cubes[k]:
+                metrics.append(metric)
+        return metrics
+
     def get_accounts_for_token(self):
         """ Return a list of account IDs available to hte associated token. """
         accounts_response = self.get('https://www.googleapis.com/analytics/v3/management/accounts')
