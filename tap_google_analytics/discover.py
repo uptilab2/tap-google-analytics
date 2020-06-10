@@ -410,6 +410,7 @@ def generate_catalog(client, report_config, standard_fields, custom_fields, all_
     Generate a catalog entry for each report specified in `report_config`
     """
     catalog_entries = []
+
     for report in PREMADE_REPORTS:
         metrics_dimensions = set(report['metrics'] + report['dimensions'])
         selected_by_default = {*report['metrics'][:10], # Use first 10 metrics in definition
@@ -430,24 +431,12 @@ def generate_catalog(client, report_config, standard_fields, custom_fields, all_
                                             stream=report['name'],
                                             tap_stream_id=report['name'],
                                             metadata=metadata.to_list(mdata)))
-    LOGGER.info("DEBUGGING REPORT CONFIG")
-    LOGGER.info(report_config)
     for report in report_config:
-        LOGGER.info("DEBUG REPORT CONFIG...")
-        LOGGER.info(client)
-        # LOGGER.info(standard_fields)
-        # LOGGER.info(custom_fields)
-        # LOGGER.info(all_cubes)
-        # LOGGER.info(cubes_lookup)
-        LOGGER.info(profile_ids)
-        schema, mdata = generate_catalog_entry(client,
-                                               standard_fields,
-                                               custom_fields,
-                                               all_cubes,
-                                               cubes_lookup,
-                                               profile_ids)
-        LOGGER.info(schema)
-        LOGGER.info(mdata)
+        metrics_dimensions = set(report['metrics_dimensions'].split(','))
+        config_fields = [field for field in standard_fields if field['id'] in metrics_dimensions]
+        schema, mdata = generate_premade_catalog_entry(config_fields,
+                                                       all_cubes,
+                                                       cubes_lookup)
 
         catalog_entries.append(CatalogEntry(schema=Schema.from_dict(schema),
                                             key_properties=['_sdc_record_hash'],
@@ -460,18 +449,13 @@ def discover(client, config, profile_ids):
     # Draw from spike to discover all the things
     # Get field_infos (standard and custom)
     report_config = config.get("report_definitions") or []
-    LOGGER.info(report_config)
     LOGGER.info("Discovering standard fields...")
     standard_fields = get_standard_fields(client)
-    LOGGER.info(standard_fields)
     LOGGER.info("Discovering custom fields...")
     custom_fields = {}
     for profile_id in profile_ids:
         custom_fields[profile_id] = get_custom_fields(client, profile_id)
-    LOGGER.info(custom_fields)
     LOGGER.info("Parsing cube definitions...")
     all_cubes, cubes_lookup = parse_cube_definitions(client)
-    # LOGGER.info(all_cubes)
-    # LOGGER.info(cubes_lookup)
     LOGGER.info("Generating catalog...")
     return generate_catalog(client, report_config, standard_fields, custom_fields, all_cubes, cubes_lookup, profile_ids)
