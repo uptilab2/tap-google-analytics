@@ -77,9 +77,7 @@ def do_sync(client, config, catalog, state):
             if field_mdata.get('inclusion') == 'unsupported':
                 continue
             _, field_name = field_path
-            if field_mdata.get('inclusion') == 'automatic' or \
-               field_mdata.get('selected') or \
-               (field_mdata.get('selected-by-default') and field_mdata.get('selected') is None):
+            if field_mdata.get('behavior'):
                 if field_mdata.get('behavior') == 'METRIC':
                     metrics.append(field_name)
                 elif field_mdata.get('behavior') == 'DIMENSION':
