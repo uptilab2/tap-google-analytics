@@ -106,10 +106,8 @@ def do_sync(client, config, catalog, state):
 
         schema = stream.schema.to_dict()
 
-        stream.tap_stream_id = stream.tap_stream_id.replace(' ', '_').lower()
-
         singer.write_schema(
-            stream.stream,
+            stream.stream.replace(' ', '_').lower(),
             schema,
             stream.key_properties
             )
