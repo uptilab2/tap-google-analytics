@@ -428,7 +428,7 @@ def generate_catalog(client, report_config, standard_fields, custom_fields, all_
 
         catalog_entries.append(CatalogEntry(schema=Schema.from_dict(schema),
                                             key_properties=['_sdc_record_hash'],
-                                            stream=report['name'],
+                                            stream=report['name'].replace(' ', '_').lower(),
                                             tap_stream_id=report['name'].replace(' ', '_').lower(),
                                             metadata=metadata.to_list(mdata)))
     for report in report_config:
@@ -440,7 +440,7 @@ def generate_catalog(client, report_config, standard_fields, custom_fields, all_
 
         catalog_entries.append(CatalogEntry(schema=Schema.from_dict(schema),
                                             key_properties=['_sdc_record_hash'],
-                                            stream=report['name'],
+                                            stream=report['name'].replace(' ', '_').lower(),
                                             tap_stream_id=report['id'].replace(' ', '_').lower(),
                                             metadata=metadata.to_list(mdata)))
     return Catalog(catalog_entries)
