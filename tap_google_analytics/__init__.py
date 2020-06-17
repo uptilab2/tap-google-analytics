@@ -106,12 +106,7 @@ def do_sync(client, config, catalog, state):
 
         schema = stream.schema.to_dict()
 
-        LOGGER.info("DEBUG STREAM BEFORE WRITE SCHEMA")
-        LOGGER.info(stream.tap_stream_id)
-        LOGGER.info(stream.stream)
-        LOGGER.info(schema)
-        LOGGER.info(stream)
-        LOGGER.info(stream.key_properties)
+        stream.tap_stream_id = stream.tap_stream_id.replace(' ', '_').lower()
 
         singer.write_schema(
             stream.stream,
