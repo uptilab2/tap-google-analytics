@@ -426,10 +426,11 @@ def generate_catalog(client, report_config, standard_fields, custom_fields, all_
                        selected_by_default,
                        mdata)
 
+        stream_id = report['name'].replace(' ', '_').lower()
         catalog_entries.append(CatalogEntry(schema=Schema.from_dict(schema),
                                             key_properties=['_sdc_record_hash'],
-                                            stream=report['name'].replace(' ', '_').lower(),
-                                            tap_stream_id=report['name'].replace(' ', '_').lower(),
+                                            stream=stream_id,
+                                            tap_stream_id=stream_id,
                                             metadata=metadata.to_list(mdata)))
     for report in report_config:
         metrics_dimensions = set(report['metrics_dimensions'].split(','))
@@ -437,11 +438,11 @@ def generate_catalog(client, report_config, standard_fields, custom_fields, all_
         schema, mdata = generate_premade_catalog_entry(config_fields,
                                                        all_cubes,
                                                        cubes_lookup)
-
+        urlize = lambda s: s.replace(' ', '_').lower()
         catalog_entries.append(CatalogEntry(schema=Schema.from_dict(schema),
                                             key_properties=['_sdc_record_hash'],
-                                            stream=report['name'].replace(' ', '_').lower(),
-                                            tap_stream_id=report['id'].replace(' ', '_').lower(),
+                                            stream=urlize(report['name']),
+                                            tap_stream_id=urlize(report['id']),
                                             metadata=metadata.to_list(mdata)))
     return Catalog(catalog_entries)
 
