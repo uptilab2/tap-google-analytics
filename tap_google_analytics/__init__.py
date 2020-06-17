@@ -109,8 +109,7 @@ def do_sync(client, config, catalog, state):
         singer.write_schema(
             stream.stream,
             schema,
-            stream.key_properties,
-            stream_alias=stream.tap_stream_id.replace(' ', '_').lower()
+            stream.key_properties
         )
 
         for report in reports_per_view:
