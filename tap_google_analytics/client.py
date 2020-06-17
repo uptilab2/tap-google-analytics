@@ -13,12 +13,47 @@ import backoff
 
 LOGGER = singer.get_logger()
 
+def is_retryable_403(response):
+    """
+    The Google Analytics Management API and Metadata API define three types of 403s that are retryable due to quota limits.
+
+    Docs:
+    https://developers.google.com/analytics/devguides/config/mgmt/v3/errors
+    https://developers.google.com/analytics/devguides/reporting/metadata/v3/errors
+    """
+    retryable_errors = {"userRateLimitExceeded", "rateLimitExceeded", "quotaExceeded"}
+    error_reasons = {error.get('reason') for error in response.json().get('error', {}).get('errors',[])}
+
+    if any(error_reasons.intersection(retryable_errors)):
+        return True
+
+    return False
+
 def should_giveup(e):
-    if e.response.status_code == 429:
-        error_message = e.response.json().get("error", {}).get("message")
+    """
+    Note: Due to `backoff` expecting a `giveup` parameter, this function returns:
+
+    True - if the exception is NOT retryable
+    False - if the exception IS retryable
+    """
+    response = e.response
+    if not _is_json(response):
+        # All of our retryable errors require a JSON response body
+        return False
+
+    do_retry = should_retry(response)
+
+    if do_retry:
+        error_message = response.json().get("error", {}).get("message")
         if error_message:
-            LOGGER.info("Encountered 429, backing off exponentially. Details: %s", error_message)
-    return not e.response.status_code == 429
+            LOGGER.info("Encountered retryable %s, backing off exponentially. Details: %s",
+                        response.status_code,
+                        error_message)
+
+    return not do_retry
+
+def should_retry(response):
+    return response.status_code == 429 or is_retryable_403(response)
 
 def _is_json(response):
     try:
@@ -126,8 +161,8 @@ class Client():
             response = self.session.request(method, url, headers=headers, params=params)
 
         error_message = _is_json(response) and response.json().get("error", {}).get("message")
-        if response.status_code == 400 and error_message:
-            raise Exception("400 Client Error: Bad Request, details: {}".format(error_message))
+        if 400 <= response.status_code < 500 and error_message and not should_retry(response):
+            raise Exception("{} Client Error, error message: {}".format(response.status_code, error_message))
 
         response.raise_for_status()
 
