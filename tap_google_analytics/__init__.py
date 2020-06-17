@@ -107,10 +107,11 @@ def do_sync(client, config, catalog, state):
         schema = stream.schema.to_dict()
 
         singer.write_schema(
-            stream.stream.replace(' ', '_').lower(),
+            stream.stream,
             schema,
-            stream.key_properties
-            )
+            stream.key_properties,
+            stream_alias=stream.tap_stream_id.replace(' ', '_').lower()
+        )
 
         for report in reports_per_view:
             state['currently_syncing_view'] = report['profile_id']
