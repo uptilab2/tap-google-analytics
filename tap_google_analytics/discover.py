@@ -411,6 +411,7 @@ def generate_catalog(client, report_config, standard_fields, custom_fields, all_
     Generate a catalog entry for each report specified in `report_config`
     """
     catalog_entries = []
+
     for report in PREMADE_REPORTS:
         metrics_dimensions = set(report['metrics'] + report['dimensions'])
         selected_by_default = {*report['metrics'][:10], # Use first 10 metrics in definition
@@ -426,24 +427,23 @@ def generate_catalog(client, report_config, standard_fields, custom_fields, all_
                        selected_by_default,
                        mdata)
 
+        stream_id = report['name'].replace(' ', '_').lower()
         catalog_entries.append(CatalogEntry(schema=Schema.from_dict(schema),
                                             key_properties=['_sdc_record_hash'],
-                                            stream=report['name'],
-                                            tap_stream_id=report['name'],
+                                            stream=stream_id,
+                                            tap_stream_id=stream_id,
                                             metadata=metadata.to_list(mdata)))
-
     for report in report_config:
-        schema, mdata = generate_catalog_entry(client,
-                                               standard_fields,
-                                               custom_fields,
-                                               all_cubes,
-                                               cubes_lookup,
-                                               profile_ids)
-
+        metrics_dimensions = set(report['metrics_dimensions'].split(','))
+        config_fields = [field for field in standard_fields if field['id'] in metrics_dimensions]
+        schema, mdata = generate_premade_catalog_entry(config_fields,
+                                                       all_cubes,
+                                                       cubes_lookup)
+        urlize = lambda s: s.replace(' ', '_').lower()
         catalog_entries.append(CatalogEntry(schema=Schema.from_dict(schema),
                                             key_properties=['_sdc_record_hash'],
-                                            stream=report['name'],
-                                            tap_stream_id=report['id'],
+                                            stream=urlize(report['name']),
+                                            tap_stream_id=urlize(report['id']),
                                             metadata=metadata.to_list(mdata)))
     return Catalog(catalog_entries)
 
